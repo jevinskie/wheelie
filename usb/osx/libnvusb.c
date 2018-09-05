@@ -80,7 +80,7 @@ IOUSBInterfaceInterface **FindInterface(IOUSBDeviceInterface **device)
   //Get an iterator for the interfaces on the device
   kr = (*device)->CreateInterfaceIterator(device,
                                         &request, &iterator);
-   if (usbInterface = IOIteratorNext(iterator))
+   if ((usbInterface = IOIteratorNext(iterator)))
    {
         //Create an intermediate plug-in
         kr = IOCreatePlugInInterfaceForService(usbInterface,

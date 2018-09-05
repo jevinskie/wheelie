@@ -18,6 +18,7 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -308,8 +309,9 @@ int main(int argc, char * const* argv) {
         nvfblob_alloc_free(&buf);
     }
     
+    size_t fsize = (size_t)&blargs.filesize;
     if(!nvfblob_alloc_read(blob, NVFBLOB_TYPE_EXT_WHEELIE_BL, &blptr, 
-                           &blargs.filesize)) {
+                           &fsize)) {
         printf("[-] Failed to read BL from blob file.\n");
         exit(0);
     }
