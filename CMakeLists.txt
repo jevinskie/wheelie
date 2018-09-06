@@ -15,7 +15,7 @@ SET(CMAKE_BUILD_TYPE Debug)
 SET(SHARED_SOURCES include/payloads.h include/wheelie.h)
 SET(WHEELIE_SOURCES wheelie.c ${SHARED_SOURCES})
 
-IF(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+IF(${CMAKE_SYSTEM_NAME} MATCHES "Linux|Darwin")
 Find_Package(libusb-1.0	REQUIRED)
 # ${LIBUSB_1_INCLUDE_DIRS} is set manually in CMake on windows
 # so we still need the include dir!
@@ -25,15 +25,15 @@ SET(LIBNVUSB_SOURCES usb/linux/libnvusb.c include/linux/libnvusb.h)
 SET(USBLIBS ${LIBUSB_1_LIBRARIES})
 INCLUDE_DIRECTORIES(include/linux)
 
-ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "Linux|Darwin")
 
-IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwinz")
 SET(LIBNVUSB_SOURCES usb/osx/libnvusb.c include/osx/libnvusb.h)
 INCLUDE_DIRECTORIES(include/osx)
 find_library(IOKIT NAMES IOKit)
 find_library(COREFOUNDATION NAMES CoreFoundation)
 SET(USBLIBS ${IOKIT} ${COREFOUNDATION})
-ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "Darwinz")
 
 IF(WIN32)
 SET(LIBNVUSB_SOURCES usb/win32/libnvusb.c include/win32/libnvusb.h)
@@ -80,7 +80,7 @@ TARGET_LINK_LIBRARIES(nv3p nvusb nvfblob)
 
 ADD_EXECUTABLE(wheelie ${WHEELIE_SOURCES})
 
-
+ADD_EXECUTABLE(dump_payloads dump_payloads.c)
 
 if(STATIC_COMPILE)
 

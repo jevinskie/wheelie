@@ -58,9 +58,9 @@ int nvusb_detect_device(int vendid, int32_t prodid, nvDevice_t* pnvdev){
 	// Code
 	*pnvdev = NULL;	
 	libusb_init(NULL);
+	libusb_set_option(NULL, LIBUSB_OPTION_LOG_LEVEL, LIBUSB_LOG_LEVEL_DEBUG);
 	nvdev = (nvDevice_t) malloc(sizeof(struct nvDevice));
 	memset(nvdev, 0, sizeof(struct nvDevice));
-	libusb_set_debug(NULL, 3);
 	cnt = libusb_get_device_list(NULL, &list);
 	if (cnt < 0)
 		ret = -2;

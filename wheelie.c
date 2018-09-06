@@ -35,6 +35,7 @@
 #include "wheelie.h"
 #include "libnv3p.h"
 #include "libnvfblob.h"
+#include "payloads.h"
 
 #define VENDOR_ID 0x955
 #define TEGRA2_PRODUCT_ID 0x7820
@@ -173,11 +174,15 @@ int main(int argc, char * const* argv) {
     nvusb_receive_unbuffered(nvdev, (uint8_t*)&chipuid_rcm, sizeof(uint64_t));
     printf("[=] Chip UID: 0x%llx\n", (unsigned long long)chipuid_rcm);
     DEBUGPRINT("Asking for Rcm version\n");
-    
+
+#if 0
     if(!nvfblob_alloc_read(blob, NVFBLOB_TYPE_RCMVER, &buf, &bufsize)){
         printf("[-] Failed to read RCMVERS from blob file.\n");
         exit(0);
     }
+#endif
+    buf = sbkv2_version;
+    bufsize = sbkv2_version_len;
 
     if(nvusb_send(nvdev, buf, bufsize) != 0) {
 
@@ -185,7 +190,7 @@ int main(int argc, char * const* argv) {
         exit(0);
     }
     
-    nvfblob_alloc_free(&buf);
+    // nvfblob_alloc_free(&buf);
 
     if(nvusb_receive_unbuffered(nvdev, (uint8_t*)&responsedata, 8) != 0) {
 
@@ -205,12 +210,16 @@ int main(int argc, char * const* argv) {
     }
 
     printf("[=] RCM Version: 0x%x\n\n", response);
-    
+
+#if 0
     if(!nvfblob_alloc_read(blob, NVFBLOB_TYPE_RCMDLEXEC, 
                            &buf, &bufsize)) {
         printf("[-] Failed to read RCMDLEXEC message from blob file.\n");
         exit(0);
     }
+#endif
+    buf = sbkv2_miniloader;
+    bufsize = sbkv2_miniloader_len;
 
     DEBUGPRINT("Sending buf\n");
     if(nvusb_send(nvdev, (uint8_t*)buf, bufsize) != 0) {
@@ -219,7 +228,7 @@ int main(int argc, char * const* argv) {
         exit(0);
     }
 
-    nvfblob_alloc_free(&buf);
+    // nvfblob_alloc_free(&buf);
 
     DEBUGPRINT("Receiving response\n");
     if(nvusb_receive_unbuffered(nvdev, (uint8_t*)&responsedata, sizeof(uint64_t)) != 0) {
